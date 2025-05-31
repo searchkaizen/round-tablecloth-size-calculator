@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round Tablecloth Size Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #333;
+      padding: 2em;
+      line-height: 1.6;
+    }
+    .calculator-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 2em;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+    .calculator-container h2 {
+      text-align: center;
+      margin-bottom: 1em;
+      font-size: 22px;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 0.25em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box; /* Added for consistent sizing */
+    }
+    /* Style for input errors */
+    .input-error {
+      border-color: #e74c3c; /* Red border for errors */
+    }
+    button {
+      background-color: #f1b241;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 1.5em;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #d9982e;
+    }
+    .result-box {
+      margin-top: 1.5em;
+      text-align: center;
+      background: linear-gradient(to right, #fff8e1, #ffe0b2);
+      padding: 1.5em;
+      border-radius: 6px;
+      border: 1px solid #f1b241;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+    .result-box.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .result-box.error { /* Style for error messages in result box */
+      background: linear-gradient(to right, #fff1f0, #ffebee); /* Lighter red gradient */
+      border-color: #e74c3c;
+      color: #c0392b; /* Darker red text for errors */
+    }
+    .result-box.error ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+    .result-box.error li {
+      margin-bottom: 0.5em;
+    }
+    .result-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+    .result-size {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 0.2em 0;
+    }
+    .result-note {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator-container">
+    <h2>Round Tablecloth Size Calculator</h2>
+
+    <label for="tableDiameter">Table Diameter (in inches):</label>
+    <input type="number" id="tableDiameter" min="20" max="100" placeholder="e.g. 60">
+
+    <label for="tableHeight">Table Height (in inches):</label>
+    <input type="number" id="tableHeight" min="20" max="50" value="30" placeholder="e.g. 30">
+
+    <label for="dropStyle">Select Drop Style:</label>
+    <select id="dropStyle" onchange="toggleCustomDrop(this.value)">
+      <option value="8">Casual (8″)</option>
+      <option value="15">Formal (15″)</option>
+      <option value="dynamicFull">Full Drop (to floor)</option>
+      <option value="custom">Custom</option>
+    </select>
+
+    <div id="customDropContainer" style="display: none;">
+      <label for="customDrop">Custom Drop Length (in inches):</label>
+      <input type="number" id="customDrop" min="1" max="50" placeholder="e.g. 12">
+    </div>
+
+    <button onclick="calculateTableclothSize()">Calculate</button>
+
+    <div id="result" class="result-box" aria-live="polite"></div>
+  </div>
+
+  <script>
+    const tableDiameterInput = document.getElementById("tableDiameter");
+    const tableHeightInput = document.getElementById("tableHeight");
+    const dropStyleSelect = document.getElementById("dropStyle");
+    const customDropContainer = document.getElementById("customDropContainer");
+    const customDropInput = document.getElementById("customDrop");
+    const resultBox = document.getElementById("result");
+
+    function toggleCustomDrop(value) {
+      if (value === "custom") {
+        customDropContainer.style.display = "block";
+        customDropInput.focus();
+      } else {
+        customDropContainer.style.display = "none";
+      }
+    }
+
+    function calculateTableclothSize() {
+      // Clear previous error states
+      [tableDiameterInput, tableHeightInput, customDropInput].forEach(input => {
+        input.classList.remove("input-error");
+      });
+      resultBox.classList.remove("error", "show");
+      resultBox.innerHTML = "";
+
+
+      const diameterStr = tableDiameterInput.value;
+      const heightStr = tableHeightInput.value;
+      const dropType = dropStyleSelect.value;
+      const customDropStr = customDropInput.value;
+
+      let errors = [];
+
+      // Validate Table Diameter
+      const diameterMin = parseFloat(tableDiameterInput.min);
+      const diameterMax = parseFloat(tableDiameterInput.max);
+      let diameter;
+      if (diameterStr === "") {
+        errors.push("Table diameter is required.");
+        tableDiameterInput.classList.add("input-error");
+      } else {
+        diameter = parseFloat(diameterStr);
+        if (isNaN(diameter)) {
+          errors.push("Table diameter must be a number.");
+          tableDiameterInput.classList.add("input-error");
+        } else if (diameter < diameterMin || diameter > diameterMax) {
+          errors.push(`Table diameter must be between ${diameterMin}″ and ${diameterMax}″.`);
+          tableDiameterInput.classList.add("input-error");
+        }
+      }
+
+      // Validate Table Height
+      const heightMin = parseFloat(tableHeightInput.min);
+      const heightMax = parseFloat(tableHeightInput.max);
+      let height;
+      if (heightStr === "") {
+        errors.push("Table height is required.");
+        tableHeightInput.classList.add("input-error");
+      } else {
+        height = parseFloat(heightStr);
+        if (isNaN(height)) {
+          errors.push("Table height must be a number.");
+          tableHeightInput.classList.add("input-error");
+        } else if (height < heightMin || height > heightMax) {
+          errors.push(`Table height must be between ${heightMin}″ and ${heightMax}″.`);
+          tableHeightInput.classList.add("input-error");
+        }
+      }
+
+      // Determine and Validate Drop
+      let drop;
+      if (dropType === "custom") {
+        const customDropMin = parseFloat(customDropInput.min);
+        const customDropMax = parseFloat(customDropInput.max);
+        if (customDropStr === "") {
+          errors.push("Custom drop length is required when 'Custom' is selected.");
+          customDropInput.classList.add("input-error");
+        } else {
+          drop = parseFloat(customDropStr);
+          if (isNaN(drop)) {
+            errors.push("Custom drop length must be a number.");
+            customDropInput.classList.add("input-error");
+          } else if (drop < customDropMin || drop > customDropMax) {
+            errors.push(`Custom drop length must be between ${customDropMin}″ and ${customDropMax}″.`);
+            customDropInput.classList.add("input-error");
+          }
+        }
+      } else if (dropType === "dynamicFull") {
+        if (!isNaN(height)) { // Only if height is valid
+            drop = height; // Full drop is table height
+        } else if (heightStr !== "") { // Height was entered but invalid
+            // Error already pushed for height, but indicate full drop needs valid height.
+            if (!errors.some(e => e.includes("Table height"))) { // Avoid duplicate general message
+                 errors.push("Valid table height is needed for 'Full Drop (to floor)'.");
+            }
+        } else { // Height was empty
+             errors.push("Table height is required for 'Full Drop (to floor)'.");
+             // Error for height requirement would already be added, this is more specific if needed.
+        }
+      } else {
+        drop = parseFloat(dropType);
+        if (isNaN(drop)) { // Should not happen with hardcoded select values
+            errors.push("Invalid drop style selected.");
+        }
+      }
+
+      if (errors.length > 0) {
+        resultBox.classList.add("error");
+        let errorHTML = "<ul>";
+        errors.forEach(err => {
+          errorHTML += `<li>${err}</li>`;
+        });
+        errorHTML += "</ul>";
+        resultBox.innerHTML = errorHTML;
+        // Trigger reflow for animation
+        void resultBox.offsetWidth;
+        resultBox.classList.add("show");
+        return;
+      }
+
+      // If all validations pass and we have necessary values for calculation
+      if (isNaN(diameter) || isNaN(drop) || isNaN(height)) {
+        // This is a fallback, should be caught by specific errors above
+        resultBox.classList.add("error");
+        resultBox.innerHTML = "<p>Please ensure all inputs are valid numbers.</p>";
+        void resultBox.offsetWidth;
+        resultBox.classList.add("show");
+        return;
+      }
+
+      const clothSize = diameter + (2 * drop);
+      let note = "";
+
+      if (drop > height + 1) { // Allow for slight variance; more than 1 inch over is puddling
+        note = "Will puddle on the floor.";
+      } else if (drop >= height -1 && drop <= height + 1) { // Within an inch of floor
+        note = "Reaches or is very near floor-length.";
+      } else if (dropType === "dynamicFull" && drop === height) {
+         note = "Reaches the floor (full drop)."
+      }
+      // You can add more nuanced notes if desired based on other drop lengths
+
+      resultBox.innerHTML = `
+        <div class="result-title">Recommended Tablecloth Size</div>
+        <div class="result-size">${clothSize}″</div>
+        <div class="result-note">${note}</div>
+      `;
+
+      // Trigger reflow for animation
+      void resultBox.offsetWidth;
+      resultBox.classList.add("show");
+    }
+  </script>
+
+</body>
+</html>
