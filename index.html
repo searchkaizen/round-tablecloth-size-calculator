@@ -18,18 +18,38 @@
       padding: 2em;
       border: 1px solid #ddd;
       border-radius: 6px;
-      background-color: #fafafa;
+      background-color: #fafafa; /* Main background for the calculator */
+      text-align: center; /* Added to center inline-block children like the title-card */
     }
-    .calculator-container h2 {
-      text-align: center;
-      margin-bottom: 1em;
-      font-size: 22px;
+
+    /* Updated styles for the title card */
+    .title-card {
+      display: inline-block; /* Makes the card wrap its content */
+      background-color: #000; /* Black background */
+      padding: 0.3em 0.7em; /* Adjusted padding */
+      border-radius: 6px;
+      margin-bottom: 2em;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2); /* Darker shadow */
     }
+
+    .title-card h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      margin: 0;
+      white-space: nowrap; /* Prevents the title from wrapping */
+    }
+
+
     label {
       display: block;
       margin-top: 1em;
       font-weight: bold;
+      margin-bottom: 0.5em;
+      text-align: left; /* Ensure labels remain left-aligned */
     }
+
+    /* Common styles for form elements */
     input, select, button {
       width: 100%;
       padding: 10px;
@@ -37,49 +57,94 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       font-size: 16px;
-      box-sizing: border-box; /* Added for consistent sizing */
+      box-sizing: border-box;
+      /* text-align: left; Removed from here */
     }
-    /* Style for input errors */
+
+    /* Specific text alignment for inputs and selects */
+    input, select {
+      text-align: left; /* Ensure text in inputs and selects is left aligned */
+    }
+    
+    input[type="number"] { 
+        text-align: left; /* Explicitly for number inputs if needed */
+    }
     .input-error {
-      border-color: #e74c3c; /* Red border for errors */
+      border-color: #e74c3c;
     }
-    button {
+
+    .drop-style-options-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 0.25em;
+    }
+    .drop-style-option {
+      flex: 1;
+      padding: 10px 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      background-color: #fff;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+    }
+    .drop-style-option:hover {
+      background-color: #e9e9e9;
+      border-color: #bbb;
+    }
+    .drop-style-option.active {
+      background-color: #f1b241;
+      color: #000;
+      border-color: #d9982e;
+      font-weight: bold;
+    }
+
+    button#calculateBtn {
       background-color: #f1b241;
       color: #000;
       font-weight: bold;
-      border: none;
+      border: none; /* Overrides general button border if any */
       cursor: pointer;
-      margin-top: 1.5em;
+      margin-top: 1.5em; /* Specific margin for this button */
       transition: background-color 0.3s ease;
+      /* Text will center by default */
     }
-    button:hover {
+    button#calculateBtn:hover {
       background-color: #d9982e;
     }
     .result-box {
       margin-top: 1.5em;
-      text-align: center;
-      background: linear-gradient(to right, #fff8e1, #ffe0b2);
+      text-align: center; 
+      background-color: #f0f0f0;
       padding: 1.5em;
       border-radius: 6px;
-      border: 1px solid #f1b241;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
       opacity: 0;
       transform: translateY(10px);
       transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
     }
     .result-box.show {
       opacity: 1;
       transform: translateY(0);
     }
-    .result-box.error { /* Style for error messages in result box */
-      background: linear-gradient(to right, #fff1f0, #ffebee); /* Lighter red gradient */
-      border-color: #e74c3c;
-      color: #c0392b; /* Darker red text for errors */
+    .result-box.error {
+      background-color: #ffebee;
+      color: #c0392b;
     }
     .result-box.error ul {
       list-style-type: none;
       padding-left: 0;
       margin-bottom: 0;
+      text-align: left;
     }
     .result-box.error li {
       margin-bottom: 0.5em;
@@ -90,52 +155,82 @@
       margin-bottom: 0.5em;
     }
     .result-size {
-      font-size: 36px;
+      font-size: 72px; 
       font-weight: bold;
       margin: 0.2em 0;
+      width: 160px; 
+      height: 160px;
+      border-radius: 50%;
+      background-color: #f1b241;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
     .result-note {
       font-size: 14px;
       color: #555;
+      margin-top: 0.5em;
     }
   </style>
 </head>
 <body>
 
   <div class="calculator-container">
-    <h2>Round Tablecloth Size Calculator</h2>
-    <p align="center"><img src="https://cdn.shopify.com/s/files/1/0250/3408/files/stretch-round-tablecloth-mvpvisuals.png"></p>
+    <div class="title-card">
+      <h2>Round Tablecloth Size Calculator</h2>
+    </div>
+
     <label for="tableDiameter">Table Diameter (in inches):</label>
     <input type="number" id="tableDiameter" min="20" max="100" placeholder="e.g. 60">
 
     <label for="tableHeight">Table Height (in inches):</label>
     <input type="number" id="tableHeight" min="20" max="50" value="30" placeholder="e.g. 30">
 
-    <label for="dropStyle">Select Drop Style:</label>
-    <select id="dropStyle" onchange="toggleCustomDrop(this.value)">
-      <option value="8">Casual (8″)</option>
-      <option value="15">Formal (15″)</option>
-      <option value="dynamicFull">Full Drop (to floor)</option>
-      <option value="custom">Custom</option>
-    </select>
+    <label>Select Drop Style:</label>
+    <div id="dropStyleOptionsContainer" class="drop-style-options-container">
+      <div class="drop-style-option" data-value="8">Casual (8″)</div>
+      <div class="drop-style-option" data-value="15">Formal (15″)</div>
+      <div class="drop-style-option" data-value="dynamicFull">Full Drop</div>
+      <div class="drop-style-option" data-value="custom">Custom</div>
+    </div>
 
     <div id="customDropContainer" style="display: none;">
       <label for="customDrop">Custom Drop Length (in inches):</label>
       <input type="number" id="customDrop" min="1" max="50" placeholder="e.g. 12">
     </div>
 
-    <button onclick="calculateTableclothSize()">Calculate</button>
+    <button id="calculateBtn" onclick="calculateTableclothSize()">Calculate</button>
 
-    <div id="result" class="result-box" aria-live="polite"></div>
+    <div id="result" class="result-box" aria-live="polite">
+      </div>
   </div>
 
   <script>
     const tableDiameterInput = document.getElementById("tableDiameter");
     const tableHeightInput = document.getElementById("tableHeight");
-    const dropStyleSelect = document.getElementById("dropStyle");
     const customDropContainer = document.getElementById("customDropContainer");
     const customDropInput = document.getElementById("customDrop");
     const resultBox = document.getElementById("result");
+
+    const dropStyleOptionElements = document.querySelectorAll(".drop-style-option");
+    let selectedDropValue = "8"; // Default selected value (Casual 8")
+
+    function initializeDropStyles() {
+      dropStyleOptionElements.forEach(option => {
+        if (option.dataset.value === selectedDropValue) {
+          option.classList.add("active");
+        }
+        option.addEventListener("click", function() {
+          dropStyleOptionElements.forEach(opt => opt.classList.remove("active"));
+          this.classList.add("active");
+          selectedDropValue = this.dataset.value;
+          toggleCustomDrop(selectedDropValue);
+        });
+      });
+      toggleCustomDrop(selectedDropValue); 
+    }
 
     function toggleCustomDrop(value) {
       if (value === "custom") {
@@ -147,22 +242,19 @@
     }
 
     function calculateTableclothSize() {
-      // Clear previous error states
       [tableDiameterInput, tableHeightInput, customDropInput].forEach(input => {
         input.classList.remove("input-error");
       });
       resultBox.classList.remove("error", "show");
-      resultBox.innerHTML = "";
-
+      resultBox.innerHTML = ""; // Clear previous results
 
       const diameterStr = tableDiameterInput.value;
       const heightStr = tableHeightInput.value;
-      const dropType = dropStyleSelect.value;
+      const dropType = selectedDropValue; 
       const customDropStr = customDropInput.value;
 
       let errors = [];
 
-      // Validate Table Diameter
       const diameterMin = parseFloat(tableDiameterInput.min);
       const diameterMax = parseFloat(tableDiameterInput.max);
       let diameter;
@@ -180,7 +272,6 @@
         }
       }
 
-      // Validate Table Height
       const heightMin = parseFloat(tableHeightInput.min);
       const heightMax = parseFloat(tableHeightInput.max);
       let height;
@@ -198,7 +289,6 @@
         }
       }
 
-      // Determine and Validate Drop
       let drop;
       if (dropType === "custom") {
         const customDropMin = parseFloat(customDropInput.min);
@@ -217,21 +307,17 @@
           }
         }
       } else if (dropType === "dynamicFull") {
-        if (!isNaN(height)) { // Only if height is valid
-            drop = height; // Full drop is table height
-        } else if (heightStr !== "") { // Height was entered but invalid
-            // Error already pushed for height, but indicate full drop needs valid height.
-            if (!errors.some(e => e.includes("Table height"))) { // Avoid duplicate general message
-                 errors.push("Valid table height is needed for 'Full Drop (to floor)'.");
+        if (!isNaN(height)) {
+            drop = height;
+        } else if (heightStr !== "") {
+            if (!errors.some(e => e.includes("Table height"))) {
+                 errors.push("Valid table height is needed for 'Full Drop'.");
             }
-        } else { // Height was empty
-             errors.push("Table height is required for 'Full Drop (to floor)'.");
-             // Error for height requirement would already be added, this is more specific if needed.
         }
-      } else {
+      } else { 
         drop = parseFloat(dropType);
-        if (isNaN(drop)) { // Should not happen with hardcoded select values
-            errors.push("Invalid drop style selected.");
+        if (isNaN(drop)) {
+            errors.push("Invalid drop style selected."); 
         }
       }
 
@@ -243,44 +329,45 @@
         });
         errorHTML += "</ul>";
         resultBox.innerHTML = errorHTML;
-        // Trigger reflow for animation
         void resultBox.offsetWidth;
         resultBox.classList.add("show");
         return;
       }
 
-      // If all validations pass and we have necessary values for calculation
       if (isNaN(diameter) || isNaN(drop) || isNaN(height)) {
-        // This is a fallback, should be caught by specific errors above
-        resultBox.classList.add("error");
-        resultBox.innerHTML = "<p>Please ensure all inputs are valid numbers.</p>";
-        void resultBox.offsetWidth;
-        resultBox.classList.add("show");
-        return;
+        if (dropType === 'dynamicFull' && isNaN(height)) {
+            // Error already handled
+        } else {
+            resultBox.classList.add("error");
+            resultBox.innerHTML = "<p>Please ensure all inputs are valid for calculation.</p>";
+            void resultBox.offsetWidth;
+            resultBox.classList.add("show");
+            return;
+        }
       }
 
       const clothSize = diameter + (2 * drop);
       let note = "";
 
-      if (drop > height + 1) { // Allow for slight variance; more than 1 inch over is puddling
+      if (drop > height + 1) {
         note = "Will puddle on the floor.";
-      } else if (drop >= height -1 && drop <= height + 1) { // Within an inch of floor
+      } else if (drop >= height -1 && drop <= height + 1) {
         note = "Reaches or is very near floor-length.";
-      } else if (dropType === "dynamicFull" && drop === height) {
+      } else if (dropType === "dynamicFull" && !isNaN(height) && drop === height) {
          note = "Reaches the floor (full drop)."
       }
-      // You can add more nuanced notes if desired based on other drop lengths
 
+      // Ensure the resultBox is empty before adding new content
       resultBox.innerHTML = `
         <div class="result-title">Recommended Tablecloth Size</div>
         <div class="result-size">${clothSize}″</div>
         <div class="result-note">${note}</div>
       `;
-
-      // Trigger reflow for animation
       void resultBox.offsetWidth;
       resultBox.classList.add("show");
     }
+
+    document.addEventListener('DOMContentLoaded', initializeDropStyles);
   </script>
 
 </body>
