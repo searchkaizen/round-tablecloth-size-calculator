@@ -26,10 +26,9 @@
     .title-card {
       display: inline-block; /* Makes the card wrap its content */
       background-color: #000; /* Black background */
-      padding: 0.3em 0.7em; /* Adjusted padding */
+      padding: 0.5em 0.9em; /* Adjusted padding */
       border-radius: 6px;
       margin-bottom: 2em;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2); /* Darker shadow */
     }
 
     .title-card h2 {
@@ -331,6 +330,7 @@
         resultBox.innerHTML = errorHTML;
         void resultBox.offsetWidth;
         resultBox.classList.add("show");
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Added scroll
         return;
       }
 
@@ -342,6 +342,7 @@
             resultBox.innerHTML = "<p>Please ensure all inputs are valid for calculation.</p>";
             void resultBox.offsetWidth;
             resultBox.classList.add("show");
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Added scroll
             return;
         }
       }
@@ -357,7 +358,6 @@
          note = "Reaches the floor (full drop)."
       }
 
-      // Ensure the resultBox is empty before adding new content
       resultBox.innerHTML = `
         <div class="result-title">Recommended Tablecloth Size</div>
         <div class="result-size">${clothSize}″</div>
@@ -365,6 +365,7 @@
       `;
       void resultBox.offsetWidth;
       resultBox.classList.add("show");
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); // Added scroll
     }
 
     document.addEventListener('DOMContentLoaded', initializeDropStyles);
