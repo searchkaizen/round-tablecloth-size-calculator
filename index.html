@@ -45,7 +45,7 @@
       margin-top: 1em;
       font-weight: bold;
       margin-bottom: 0.5em;
-      text-align: left; /* Ensure labels remain left-aligned */
+      text-align: left; /* Ensure labels remain left-aligned by default */
     }
 
     /* Common styles for form elements */
@@ -57,26 +57,48 @@
       border-radius: 4px;
       font-size: 16px;
       box-sizing: border-box;
-      /* text-align: left; Removed from here */
     }
 
     /* Specific text alignment for inputs and selects */
     input, select {
-      text-align: left; /* Ensure text in inputs and selects is left aligned */
+      text-align: left; 
     }
     
     input[type="number"] { 
-        text-align: left; /* Explicitly for number inputs if needed */
+        text-align: left; 
     }
     .input-error {
       border-color: #e74c3c;
     }
 
+    /* Styles for input row */
+    .input-row {
+      display: flex;
+      gap: 1em; 
+      align-items: flex-start; 
+    }
+    .input-column {
+      flex: 1; 
+      display: flex; /* Added */
+      flex-direction: column; /* Added */
+      align-items: center; /* Added: This will center the label and input within the column */
+    }
+    .input-column label {
+        margin-top: 0; 
+        text-align: center; /* Added: Center the text within these specific labels */
+        width: auto; /* Allow label to be as wide as its text, will be centered by parent */
+    }
+    .input-column input[type="number"] {
+        max-width: 120px; 
+        /* The input itself will be centered by align-items:center on .input-column */
+    }
+
+
     .drop-style-options-container {
       display: flex;
       justify-content: space-between;
       gap: 8px;
-      margin-top: 0.25em;
+      margin-top: 0.25em; 
     }
     .drop-style-option {
       flex: 1;
@@ -108,11 +130,10 @@
       background-color: #f1b241;
       color: #000;
       font-weight: bold;
-      border: none; /* Overrides general button border if any */
+      border: none; 
       cursor: pointer;
-      margin-top: 1.5em; /* Specific margin for this button */
+      margin-top: 1.5em; 
       transition: background-color 0.3s ease;
-      /* Text will center by default */
     }
     button#calculateBtn:hover {
       background-color: #d9982e;
@@ -182,11 +203,16 @@
     </div>
       <img src="https://cdn.shopify.com/s/files/1/0250/3408/files/stretch-round-tablecloth-mvpvisuals.png?v=1748730151">
 
-    <label for="tableDiameter">Table Diameter (in inches):</label>
-    <input type="number" id="tableDiameter" min="20" max="100" placeholder="e.g. 60">
-
-    <label for="tableHeight">Table Height (in inches):</label>
-    <input type="number" id="tableHeight" min="20" max="50" value="30" placeholder="e.g. 30">
+    <div class="input-row">
+      <div class="input-column">
+        <label for="tableDiameter">Table Diameter (in):</label>
+        <input type="number" id="tableDiameter" min="20" max="100" placeholder="e.g. 60">
+      </div>
+      <div class="input-column">
+        <label for="tableHeight">Table Height (in):</label>
+        <input type="number" id="tableHeight" min="20" max="50" value="30" placeholder="e.g. 30">
+      </div>
+    </div>
 
     <label>Select Drop Style:</label>
     <div id="dropStyleOptionsContainer" class="drop-style-options-container">
